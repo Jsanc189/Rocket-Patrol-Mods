@@ -1,5 +1,5 @@
 let config = {
-    type: Phaser.CANVAS,
+    type: Phaser.CANVAS, //pixel art is great on this  WEBGL is good for tinting images
     width: 640,
     height: 480,
     scene: [Menu, Play]
