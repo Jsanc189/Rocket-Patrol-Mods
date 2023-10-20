@@ -66,12 +66,18 @@ class Play extends Phaser.Scene{
 
         this.timer = 60000
         //60-second play clock
+
+        this.timer_right = this.add.text(borderUISize+borderPadding * 22.5, borderUISize + borderPadding*2, this.timer / 1000, scoreConfig);
+        
+
         scoreConfig.fixedWidth = 0;
         this.clock = this.time.delayedCall(this.timer, () => {
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or <= for Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
         }, null, this);
+
+        
 
     }
 
