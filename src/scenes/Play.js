@@ -33,6 +33,8 @@ class Play extends Phaser.Scene{
 
         this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0,0);
 
+        this.ship04 = new Spaceship_2(this, 0, borderUISize *7 + borderPadding*5, 'spaceship-2', 0, 50).setOrigin(0,0);
+
         //define keys
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
@@ -94,6 +96,7 @@ class Play extends Phaser.Scene{
             this.ship01.update();           //update the ships
             this.ship02.update();
             this.ship03.update();
+            this.ship04.update();
         }
         
 
@@ -111,6 +114,11 @@ class Play extends Phaser.Scene{
             //console.log('kaboom ship 01');
             this.p1Rocket.reset();
             this.shipExplode(this.ship01);
+        }
+
+        if(this.checkCollision(this.p1Rocket, this.ship04)) {
+            this.p1Rocket.reset();
+            this.shipExplode(this.ship04);
         }
     }
 
