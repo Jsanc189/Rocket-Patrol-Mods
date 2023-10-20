@@ -42,6 +42,7 @@ class Play extends Phaser.Scene{
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
+
         //animation config
         this.anims.create({
             key: 'explode',
@@ -139,8 +140,16 @@ class Play extends Phaser.Scene{
     shipExplode(ship) {
         //temprorarily hide ship
         ship.alpha = 0;
+
+        //sound effects list
+        let sound_effects = ['sfx_explosion', 'sfx_explosion_2', 'sfx_explosion_3', 'sfx_explosion_4', 'sfx_explosion_5'];
+        
+        //random number
+        let random_num = Math.floor(Math.random()*5);
+        //console.log(random_num)
+
         //create explosion sprite at ship's position
-        let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0,0);
+        let boom = this.add.sprite(ship.x, ship.y, sound_effects[random_num]).setOrigin(0,0);
         boom.anims.play('explode');         //play explode animation
         boom.on('animationcomplete', () =>{ //calback after anim completes
             ship.reset();                   //reset ship position
@@ -150,7 +159,9 @@ class Play extends Phaser.Scene{
 
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
-        this.sound.play('sfx_explosion');
+        this.sound.play(sound_effects[random_num]);
     }
+
+
 
 }
