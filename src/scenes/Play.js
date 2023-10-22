@@ -68,18 +68,22 @@ class Play extends Phaser.Scene{
 
         this.gameOver = false;
 
-        this.timer = 60000
+        this.time = 60;
+        this.timeText = this.add.text(borderUISize+borderPadding * 22.5, borderUISize + borderPadding*2, "00:00");
+        this.timeText.fill = '#000000';
+        this.timer = game.time.events.loop(1000, tick, this);
         //60-second play clock
 
-        this.timer_right = this.add.text(borderUISize+borderPadding * 22.5, borderUISize + borderPadding*2, this.timer / 1000, scoreConfig);
-        
+        //this.timer_right = this.add.text(borderUISize+borderPadding * 22.5, borderUISize + borderPadding*2, this.timer / 1000, scoreConfig);
+        //this.timeText.anchor.set(0.5, 0.5);
+        //this.timer = this.game.time.events.loop(Phaser.Timer.SECOND, this.updateTimer, this);
 
         scoreConfig.fixedWidth = 0;
-        this.clock = this.time.delayedCall(this.timer, () => {
-            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or <= for Menu', scoreConfig).setOrigin(0.5);
-            this.gameOver = true;
-        }, null, this);
+        // this.clock = this.time.delayedCall(this.timer, () => {
+        //     this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
+        //     this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or <= for Menu', scoreConfig).setOrigin(0.5);
+        //     this.gameOver = true;
+        // }, null, this);
 
         
 
@@ -89,6 +93,8 @@ class Play extends Phaser.Scene{
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.scene.start("menuScene");
         }
+
+
 
         this.starfield.tilePositionX -= 4;
 
@@ -163,6 +169,32 @@ class Play extends Phaser.Scene{
         this.scoreLeft.text = this.p1Score;
         this.sound.play(sound_effects[random_num]);
     }
+
+    tick (){
+        this.timeLimit--;
+        var minutes = Math.floor(this.timeLimit / 60);
+        var seconds = this.timeLimit - (minutes * 60);
+        var timeString = addZeros(minutes) + ':' + addZeros(seconds);
+        this.timeText.text = timeString;
+        if(this.timeLimit == 0) {
+            outOfTime();
+        }
+    }
+
+    addZeros(num){
+        if(num < 10) {
+            num = "0" + num;
+        }
+        return num;
+    }
+
+    outOfTime() {
+        this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or <= for Menu', scoreConfig).setOrigin(0.5);
+        this.gameOver = true;
+    }
+
+
 
 
 

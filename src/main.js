@@ -1,3 +1,17 @@
+// Name:Jackie Sanchez
+// Rocket Patrol with MODS
+// Create 4 new explosion sounds with randome plays on impact of ship (3)
+// Display time remaining (in seconds) on the screen. (3)
+// Create a new enemy ship type w/ new art (smaller, faster and worth more points)  (5)
+// Implement a new timing scoring where the timer extends with a ship hit (5)
+// Implement a 2 player mode
+
+// Date: 10/20/23
+
+// floss.booktype.pro/learn-javascript-with-phaser/game-mechanic-add-a-countdown-timer/ 
+// used to make timer appear onscreen
+
+
 let config = {
     type: Phaser.CANVAS, //pixel art is great on this  WEBGL is good for tinting images
     width: 640,
