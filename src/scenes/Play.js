@@ -75,7 +75,7 @@ class Play extends Phaser.Scene{
             callbackScope: this
         })
 
-        this.timeLimit = 1;
+        this.timeLimit = 10;
         this.gameTimeText = this.timeLimit.toString();
         this.PlayerTimer = this.add.text(borderUISize+borderPadding * 22.5, borderUISize + borderPadding*2, this.gameTimeText, scoreConfig);
 
@@ -103,8 +103,6 @@ class Play extends Phaser.Scene{
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.scene.start("menuScene");
         }
-
-        this.gameTimer
 
         this.starfield.tilePositionX -= 4;
 
@@ -188,6 +186,7 @@ class Play extends Phaser.Scene{
         var timeString = this.addZeros(minutes) + ':' + this.addZeros(seconds);
         this.gameTimeText = timeString;
         console.log(this.gameTimeText);
+        this.PlayerTimer.text = this.gameTimeText;
         if(this.timeLimit == 0) {
             this.outOfTime();
         }
