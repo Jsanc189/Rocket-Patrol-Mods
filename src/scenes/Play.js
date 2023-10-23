@@ -68,10 +68,20 @@ class Play extends Phaser.Scene{
 
         this.gameOver = false;
 
-        this.time = 60;
-        this.timeText = this.add.text(borderUISize+borderPadding * 22.5, borderUISize + borderPadding*2, "00:00");
-        this.timeText.fill = '#000000';
-        this.timer = game.time.events.loop(1000, tick, this);
+        this.gameTimer = this.time.addEvent({
+            delay: 1000,
+            loop: true,
+            callback:this.tick,
+            callbackScope: this
+        })
+
+        this.timeLimit = 1;
+        this.gameTimeText = this.timeLimit.toString();
+        this.PlayerTimer = this.add.text(borderUISize+borderPadding * 22.5, borderUISize + borderPadding*2, this.gameTimeText, scoreConfig);
+
+
+        //this.timeLimit = 60;
+        //this.PlayerTimer = this.(60000, this.tick, this);
         //60-second play clock
 
         //this.timer_right = this.add.text(borderUISize+borderPadding * 22.5, borderUISize + borderPadding*2, this.timer / 1000, scoreConfig);
@@ -94,7 +104,7 @@ class Play extends Phaser.Scene{
             this.scene.start("menuScene");
         }
 
-
+        this.gameTimer
 
         this.starfield.tilePositionX -= 4;
 
@@ -164,7 +174,8 @@ class Play extends Phaser.Scene{
         });
 
         this.p1Score += ship.points;
-        this.timer += ship.points * 1000;
+        this.timeLimit += ship.points;
+        
 
         this.scoreLeft.text = this.p1Score;
         this.sound.play(sound_effects[random_num]);
@@ -174,10 +185,11 @@ class Play extends Phaser.Scene{
         this.timeLimit--;
         var minutes = Math.floor(this.timeLimit / 60);
         var seconds = this.timeLimit - (minutes * 60);
-        var timeString = addZeros(minutes) + ':' + addZeros(seconds);
-        this.timeText.text = timeString;
+        var timeString = this.addZeros(minutes) + ':' + this.addZeros(seconds);
+        this.gameTimeText = timeString;
+        console.log(this.gameTimeText);
         if(this.timeLimit == 0) {
-            outOfTime();
+            this.outOfTime();
         }
     }
 
@@ -189,8 +201,33 @@ class Play extends Phaser.Scene{
     }
 
     outOfTime() {
-        this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or <= for Menu', scoreConfig).setOrigin(0.5);
+        let gameOverConfig = {
+            fontFamily: 'Courier',
+            fontSize: '28px',
+            backgroundColor: '#F3B141',
+            color: '#843605',
+            align: 'center',
+            padding: {
+                top:5,
+                bottom:5
+            },
+            fixedWidth: 200
+        }
+        let optionsConfig = {
+            fontFamily: 'Courier',
+            fontSize: '25px',
+            backgroundColor: '#F3B141',
+            color: '#843605',
+            align: 'center',
+            padding: {
+                top:5,
+                bottom: 5,
+            },
+            fixedWidth: 550
+        };
+
+        this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', gameOverConfig).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or <= for Menu', optionsConfig).setOrigin(0.5);
         this.gameOver = true;
     }
 
