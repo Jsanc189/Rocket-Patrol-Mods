@@ -75,8 +75,8 @@ class Play extends Phaser.Scene{
             callbackScope: this
         })
 
-        this.timeLimit = 10;
-        this.gameTimeText = this.timeLimit.toString();
+        this.timeLimit = 60;
+        this.gameTimeText = '00:' + this.timeLimit.toString();
         this.PlayerTimer = this.add.text(borderUISize+borderPadding * 22.5, borderUISize + borderPadding*2, this.gameTimeText, scoreConfig);
 
 
