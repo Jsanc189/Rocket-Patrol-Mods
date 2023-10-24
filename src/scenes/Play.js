@@ -26,7 +26,8 @@ class Play extends Phaser.Scene{
     
         //add Rocket (p1)
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5,0);
-
+        this.p2Rocket = new Rocket(this, 0, 0, 'rocket').setOrigin(0.5,0);
+    
         //add spaceships (X3)
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0,0);
 
@@ -65,12 +66,13 @@ class Play extends Phaser.Scene{
             },
             fixedWidth: 100
         }
+
+        this.turnCounter = 0;
         this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
         
         if(game.settings.playerCount == 2){
             console.log("I have 2 players");
             this.scoreRight = this.add.text(borderUISize + borderPadding * 40, borderUISize + borderPadding*2, this.p2Score, scoreConfig);
-
         }
         
 
@@ -83,10 +85,24 @@ class Play extends Phaser.Scene{
             callbackScope: this
         })
 
-        this.timeLimit = 60;
-        this.gameTimeText = '00:' + this.timeLimit.toString();
+        this.timeLimit = 3;
+        this.gameTimeText = '00:0' + this.timeLimit.toString();
         this.PlayerTimer = this.add.text(borderUISize+borderPadding * 22.5, borderUISize + borderPadding*2, this.gameTimeText, scoreConfig);
 
+        let readyConfig = {
+            fontFamily: 'Courier',
+            fontSize: '20px',
+            backgroundColor: '#F3B141',
+            color: '#843605',
+            align: 'center',
+            padding: {
+                top:5,
+                bottom: 5,
+            },
+            fixedWidth: 400
+        }
+        this.readyPlayer = this.add.text(game.config.width/2, game.config.height/2 + borderUISize +
+            borderPadding, 'Get ready Player 1!', readyConfig).setOrigin(0.5);
 
         //this.timeLimit = 60;
         //this.PlayerTimer = this.(60000, this.tick, this);
@@ -112,37 +128,52 @@ class Play extends Phaser.Scene{
             this.scene.start("menuScene");
         }
 
-        this.starfield.tilePositionX -= 4;
-
-        if (!this.gameOver) {
-            this.p1Rocket.update();         //update the rocket
-
-            this.ship01.update();           //update the ships
-            this.ship02.update();
-            this.ship03.update();
-            this.ship04.update();
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
+            this.scene.start('playScene');
         }
+
+
+        if (this.turnCounter == 1 || this.turnCounter == 3) {
+            this.readyPlayer.visible = false;
+            this.starfield.tilePositionX -= 4;
+
+            if (!this.gameOver) {
+                if(this.turnCounter == 0 || this.turnCounter == 1){
+                    this.p1Rocket.update();         //update the rocket
+                    console.log("It's player 1's turn");
+                }
+                if(this.turnCounter == 2) {
+                    this.p2Rocket.update();
+                    console.log("It's player 2's turn");
+                }
+            
+                this.ship01.update();           //update the ships
+                this.ship02.update();
+                this.ship03.update();
+                this.ship04.update();
+            }
         
 
-        if(this.checkCollision(this.p1Rocket, this.ship03)) {
-            //console.log('kaboom ship 03');
-            this.p1Rocket.reset();
-            this.shipExplode(this.ship03);
-        }
-        if(this.checkCollision(this.p1Rocket, this.ship02)) {
-            //console.log('kaboom ship 02');
-            this.p1Rocket.reset();
-            this.shipExplode(this.ship02);
-        }
-        if(this.checkCollision(this.p1Rocket, this.ship01)) {
-            //console.log('kaboom ship 01');
-            this.p1Rocket.reset();
-            this.shipExplode(this.ship01);
-        }
+            if(this.checkCollision(this.p1Rocket, this.ship03)) {
+                //console.log('kaboom ship 03');
+                this.p1Rocket.reset();
+                this.shipExplode(this.ship03);
+            }
+            if(this.checkCollision(this.p1Rocket, this.ship02)) {
+                //console.log('kaboom ship 02');
+                this.p1Rocket.reset();
+                this.shipExplode(this.ship02);
+            }
+            if(this.checkCollision(this.p1Rocket, this.ship01)) {
+                //console.log('kaboom ship 01');
+                this.p1Rocket.reset();
+                this.shipExplode(this.ship01);
+            }
 
-        if(this.checkCollision(this.p1Rocket, this.ship04)) {
-            this.p1Rocket.reset();
-            this.shipExplode(this.ship04);
+            if(this.checkCollision(this.p1Rocket, this.ship04)) {
+                this.p1Rocket.reset();
+                this.shipExplode(this.ship04);
+            }
         }
     }
 
@@ -232,10 +263,54 @@ class Play extends Phaser.Scene{
             },
             fixedWidth: 550
         };
+        if (this.turnCounter == 0) {
+            this.turnCounter += 1;
+            this.timeLimit = 60;
+            return
+        
+        }
 
-        this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', gameOverConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or <= for Menu', optionsConfig).setOrigin(0.5);
-        this.gameOver = true;
+        if(this.turnCounter == 1) {
+            this.turnCounter += 1;
+            this.timeLimit = 3;
+            this.readyPlayer.text = 'Get Ready Player 2!';
+            this.readyPlayer.visible = true;
+            return;
+        }
+
+        if(this.turnCounter == 2) {
+            this.turnCounter +=1;
+            this.timeLimit = 60;
+            this.ship01.x = game.config.width + borderUISize*6;
+            this.ship01.y = borderUISize*4;
+
+            this.ship02.x = game.config.width + borderUISize*3;
+            this.ship02.y = borderUISize*5 + borderPadding*2;
+
+            this.ship03.x = game.config.width;
+            this.ship03.y = borderUISize*6 + borderPadding*4;
+
+
+            this.ship04.x = game.config.width - borderUISize;
+            this.ship04.y = borderUISize *7 + borderPadding*5;
+            return;
+        }
+
+        if(game.settings.playerCount == 2 && this.turnCounter == 2) {
+            this.p2Rocket.x = game.config.width/2
+            this.p2Rocket.y = game.config.height - borderUISize - borderPadding;
+            this.p1Rocket.x = 0;
+            this.p1Rocket.y = 0;
+            game.settings.playerCount = 0;
+            return;
+        }
+
+        else {
+            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', gameOverConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or <= for Menu', optionsConfig).setOrigin(0.5);
+            this.gameOver = true;
+            return;
+        }
     }
 
 

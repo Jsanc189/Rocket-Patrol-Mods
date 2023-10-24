@@ -11,6 +11,9 @@
 // floss.booktype.pro/learn-javascript-with-phaser/game-mechanic-add-a-countdown-timer/ 
 // used to make timer appear onscreen
 
+//stackoverflow.com/questions/29148886/show-hide-sprites-texts-in-phaser
+//used to show and hide text between player rounds
+
 
 let config = {
     type: Phaser.CANVAS, //pixel art is great on this  WEBGL is good for tinting images
