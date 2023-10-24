@@ -296,7 +296,7 @@ class Play extends Phaser.Scene{
         };
         if (this.turnCounter == 0) {
             this.turnCounter += 1;
-            this.timeLimit = 5;
+            this.timeLimit = 60;
             return
         
         }
@@ -311,7 +311,7 @@ class Play extends Phaser.Scene{
 
         if(this.turnCounter == 2) {
             this.turnCounter +=1;
-            this.timeLimit = 5;
+            this.timeLimit = 60;
             this.ship01.x = game.config.width + borderUISize*6;
             this.ship01.y = borderUISize*4;
 
