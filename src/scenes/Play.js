@@ -51,6 +51,7 @@ class Play extends Phaser.Scene{
         });
 
         this.p1Score = 0;
+        this.p2Score = 0;
 
         let scoreConfig = {
             fontFamily: 'Courier',
@@ -65,6 +66,13 @@ class Play extends Phaser.Scene{
             fixedWidth: 100
         }
         this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
+        
+        if(game.settings.playerCount == 2){
+            console.log("I have 2 players");
+            this.scoreRight = this.add.text(borderUISize + borderPadding * 40, borderUISize + borderPadding*2, this.p2Score, scoreConfig);
+
+        }
+        
 
         this.gameOver = false;
 
@@ -172,7 +180,7 @@ class Play extends Phaser.Scene{
         });
 
         this.p1Score += ship.points;
-        this.timeLimit += ship.points;
+        this.timeLimit += ship.points / 10;
         
 
         this.scoreLeft.text = this.p1Score;

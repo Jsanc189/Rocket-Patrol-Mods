@@ -85,8 +85,11 @@ class Menu extends Phaser.Scene{
             //Easy mode
             game.settings = {
                 spaceshipSpeed: 3,
-                gameTimer: 60000
+                gameTimer: 60000,
+                playerCount: this.gameState
+                
             }
+            console.log(game.settings.playerCount);
             this.sound.play('sfx_select');
             this.scene.start('playScene');
         }
@@ -95,7 +98,8 @@ class Menu extends Phaser.Scene{
             //Hard mode
             game.settings = {
                 spaceshipSpeed: 4,
-                gameTimer: 4500
+                gameTimer: 4500,
+                playerCount: this.gameState
             }
             this.sound.play('sfx_select');
             this.scene.start('playScene');
