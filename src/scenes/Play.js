@@ -142,7 +142,8 @@ class Play extends Phaser.Scene{
                     this.p1Rocket.update();         //update the rocket
                     console.log("It's player 1's turn");
                 }
-                if(this.turnCounter == 2) {
+                if(this.turnCounter == 3) {
+
                     this.p2Rocket.update();
                     console.log("It's player 2's turn");
                 }
@@ -153,47 +154,50 @@ class Play extends Phaser.Scene{
                 this.ship04.update();
             }
         
+            if(this.turnCounter == 1) {
+                if(this.checkCollision(this.p1Rocket, this.ship03)) {
+                    //console.log('kaboom ship 03');
+                    this.p1Rocket.reset();
+                    this.shipExplode(this.ship03);
+                }
+                if(this.checkCollision(this.p1Rocket, this.ship02)) {
+                    //console.log('kaboom ship 02');
+                    this.p1Rocket.reset();
+                    this.shipExplode(this.ship02);
+                }
+                if(this.checkCollision(this.p1Rocket, this.ship01)) {
+                    //console.log('kaboom ship 01');
+                    this.p1Rocket.reset();
+                    this.shipExplode(this.ship01);
+                }
 
-            if(this.checkCollision(this.p1Rocket, this.ship03)) {
-                //console.log('kaboom ship 03');
-                this.p1Rocket.reset();
-                this.shipExplode(this.ship03);
-            }
-            if(this.checkCollision(this.p1Rocket, this.ship02)) {
-                //console.log('kaboom ship 02');
-                this.p1Rocket.reset();
-                this.shipExplode(this.ship02);
-            }
-            if(this.checkCollision(this.p1Rocket, this.ship01)) {
-                //console.log('kaboom ship 01');
-                this.p1Rocket.reset();
-                this.shipExplode(this.ship01);
-            }
-
-            if(this.checkCollision(this.p2Rocket, this.ship04)) {
-                this.p1Rocket.reset();
-                this.shipExplode(this.ship04);
-            }
-
-            if(this.checkCollision(this.p2Rocket, this.ship03)) {
-                //console.log('kaboom ship 03');
-                this.p1Rocket.reset();
-                this.shipExplode(this.ship03);
-            }
-            if(this.checkCollision(this.p2Rocket, this.ship02)) {
-                //console.log('kaboom ship 02');
-                this.p1Rocket.reset();
-                this.shipExplode(this.ship02);
-            }
-            if(this.checkCollision(this.p2Rocket, this.ship01)) {
-                //console.log('kaboom ship 01');
-                this.p1Rocket.reset();
-                this.shipExplode(this.ship01);
+                if(this.checkCollision(this.p1Rocket, this.ship04)) {
+                    this.p1Rocket.reset();
+                    this.shipExplode(this.ship04);
+                }
             }
 
-            if(this.checkCollision(this.p2Rocket, this.ship04)) {
-                this.p1Rocket.reset();
-                this.shipExplode(this.ship04);
+            if (this.turnCounter == 3) {
+                if(this.checkCollision(this.p2Rocket, this.ship03)) {
+                    //console.log('kaboom ship 03');
+                    this.p2Rocket.reset();
+                    this.shipExplode(this.ship03);
+                }
+                if(this.checkCollision(this.p2Rocket, this.ship02)) {
+                    //console.log('kaboom ship 02');
+                    this.p2Rocket.reset();
+                    this.shipExplode(this.ship02);
+                }
+                if(this.checkCollision(this.p2Rocket, this.ship01)) {
+                    //console.log('kaboom ship 01');
+                    this.p2Rocket.reset();
+                    this.shipExplode(this.ship01);
+                }
+
+                if(this.checkCollision(this.p2Rocket, this.ship04)) {
+                    this.p2Rocket.reset();
+                    this.shipExplode(this.ship04);
+                }
             }
         }
     }
@@ -231,11 +235,17 @@ class Play extends Phaser.Scene{
             boom.destroy();                 //remove explosion sprite
         });
 
-        this.p1Score += ship.points;
+        if(this.turnCounter != 3) {
+            this.p1Score += ship.points;
+        }
+        else{
+            this.p2Score += ship.points;
+        }
         this.timeLimit += ship.points / 10;
         
 
         this.scoreLeft.text = this.p1Score;
+        this.scoreRight.text = this.p2Score;
         this.sound.play(sound_effects[random_num]);
     }
 
@@ -286,7 +296,7 @@ class Play extends Phaser.Scene{
         };
         if (this.turnCounter == 0) {
             this.turnCounter += 1;
-            this.timeLimit = 60;
+            this.timeLimit = 5;
             return
         
         }
@@ -301,7 +311,7 @@ class Play extends Phaser.Scene{
 
         if(this.turnCounter == 2) {
             this.turnCounter +=1;
-            this.timeLimit = 60;
+            this.timeLimit = 5;
             this.ship01.x = game.config.width + borderUISize*6;
             this.ship01.y = borderUISize*4;
 
@@ -314,17 +324,17 @@ class Play extends Phaser.Scene{
 
             this.ship04.x = game.config.width - borderUISize;
             this.ship04.y = borderUISize *7 + borderPadding*5;
-            return;
-        }
-
-        if(game.settings.playerCount == 2 && this.turnCounter == 2) {
             this.p2Rocket.x = game.config.width/2
             this.p2Rocket.y = game.config.height - borderUISize - borderPadding;
             this.p1Rocket.x = 0;
             this.p1Rocket.y = 0;
-            game.settings.playerCount = 0;
             return;
         }
+
+        // if(game.settings.playerCount == 2 && this.turnCounter == 2) {
+        //     game.settings.playerCount = 0;
+        //     return;
+        // }
 
         else {
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', gameOverConfig).setOrigin(0.5);
