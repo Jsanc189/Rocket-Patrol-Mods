@@ -245,7 +245,10 @@ class Play extends Phaser.Scene{
         
 
         this.scoreLeft.text = this.p1Score;
-        this.scoreRight.text = this.p2Score;
+        if (game.settings.playerCount == 2) {
+            this.scoreRight.text = this.p2Score;
+        }
+
         this.sound.play(sound_effects[random_num]);
     }
 
@@ -301,7 +304,7 @@ class Play extends Phaser.Scene{
         
         }
 
-        if(this.turnCounter == 1) {
+        if(game.settings.playerCount == 2 && this.turnCounter == 1) {
             this.turnCounter += 1;
             this.timeLimit = 3;
             this.readyPlayer.text = 'Get Ready Player 2!';
@@ -309,7 +312,7 @@ class Play extends Phaser.Scene{
             return;
         }
 
-        if(this.turnCounter == 2) {
+        if(game.settings.playerCount == 2 && this.turnCounter == 2) {
             this.turnCounter +=1;
             this.timeLimit = 60;
             this.ship01.x = game.config.width + borderUISize*6;
